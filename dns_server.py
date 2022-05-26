@@ -7,7 +7,7 @@ DNS_BOOK_DEVICE={}
 
 def Device():
     domainName = input('Enter the domain name: ')
-    domainName=tldextract.extract(domainName).suffix
+    domainName=(tldextract.extract(domainName).domain)+"."+(tldextract.extract(domainName).suffix)
     print("FINDING THE IP IN THE DEVICE")
     if DNS_BOOK_DEVICE.get(domainName)==None:
         print("NOT FOUND IN CACHE MEMEORY OF THE DEVICE....FORWARDING TO ISP")
