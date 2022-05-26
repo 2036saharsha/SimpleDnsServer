@@ -53,10 +53,14 @@ def Root_Name_Server(domainName):
     for val in result:
         if (val.to_text()[:1]) == suffix[:1]:
             Name_server=val.to_text()
+
     TLD_IPS = resolver.resolve(Name_server, 'A')
-    TLD_IP= [ns.to_text() for ns in TLD_IPS]
-    print("Found",TLD_IP[0],"in RNS")
-    return(TLD_IP[0])
+    
+    for val in TLD_IPS:
+        TLD_IP=val.to_text()
+    print("Found",TLD_IP,"in RNS")
+    print("Address of TLDCOM server",TLD_IP)
+    return(TLD_IP)
        
 def Top_level_Domain(domainName,Address_TLD):
     print("IN.....Top_level_domain")
@@ -64,16 +68,18 @@ def Top_level_Domain(domainName,Address_TLD):
     res = dns.resolver.Resolver(configure=False)
     res.nameservers = [Address_TLD]
     r = res.resolve(domainName, 'ns')
-    nameservers = [ns.to_text() for ns in r]
+    for val in r:
+        nameserver=val.to_text()
     
 
-    # Get the Address of the ANS
+    # Get the IP_Address of the ANS
     res = dns.resolver.Resolver(configure=False)
     res.nameservers = [Address_TLD]
-    r = res.resolve(nameservers[0], 'A')
-    ANS_address = [ns.to_text() for ns in r]
-    print("Found",ANS_address[0],"in",Address_TLD)
-    return(ANS_address[0])
+    r = res.resolve(nameserver, 'A')
+    for val in r:
+        ANS_address=val.to_text()
+    print("Found",ANS_address,"in",Address_TLD)
+    return(ANS_address)
     
 
 def Authoritative_Name_Server(domainName,ANS_address):
@@ -82,9 +88,10 @@ def Authoritative_Name_Server(domainName,ANS_address):
         res = dns.resolver.Resolver(configure=False)
         res.nameservers = [ANS_address]
         r = res.resolve(domainName, 'a')
-        Get_IP = [ns.to_text() for ns in r]
-        print("Found",Get_IP[0],"in",ANS_address)
-        return(Get_IP[0])
+        for val in r:
+            Get_IP=val.to_text()
+        print("Found",Get_IP,"in",ANS_address)
+        return(Get_IP)
     except:
         return("No Domain Name registered")
 
