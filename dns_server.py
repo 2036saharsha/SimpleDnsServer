@@ -1,8 +1,3 @@
-#First install the libraries using following codes in your terminal
-#pip3 install sockets
-#pip3 install tldextract
-
-
 
 import dns.resolver
 import tldextract
