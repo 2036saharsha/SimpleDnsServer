@@ -1,9 +1,12 @@
-
+import webbrowser
 import dns.resolver
 import tldextract
 DNS_BOOK_ISP={}
 DNS_BOOK_DEVICE={}
 
+def BrowserOpen(domainName):
+    chrome=webbrowser.Chrome("$path to your browser")
+    chrome.open_new_tab(domainName)
 def Device():
     domainName = input('Enter the domain name: ')
     domainName=(tldextract.extract(domainName).domain)+"."+(tldextract.extract(domainName).suffix)
@@ -17,6 +20,7 @@ def Device():
             return
         print("Received ip of domainName from ISP.....User's device")
         DNS_BOOK_DEVICE.update({domainName: Ip})
+        BrowserOpen(domainName)
         print("The IP address of",domainName,"is",Ip)
         n=input("Do you want to continue? y or n: ")
         if n =="y":
@@ -25,6 +29,7 @@ def Device():
             exit
     else:
         print("The IP address of",domainName,"is",DNS_BOOK_DEVICE.get(domainName))
+        BrowserOpen(domainName)
         n=input("Do you want to continue? y or n: ")
         if n =="y":
             Device()
