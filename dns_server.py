@@ -1,5 +1,4 @@
 
-
 import dns.resolver
 import tldextract
 DNS_BOOK_ISP={}
@@ -11,7 +10,11 @@ def Device():
     print("FINDING THE IP IN THE DEVICE")
     if DNS_BOOK_DEVICE.get(domainName)==None:
         print("NOT FOUND IN CACHE MEMEORY OF THE DEVICE....FORWARDING TO ISP")
-        Ip=Isp_DNS_Resolver(domainName)
+        try:
+            Ip=Isp_DNS_Resolver(domainName)
+        except:
+            print("Domain Name Not registered")
+            return
         print("Received ip of domainName from ISP.....User's device")
         DNS_BOOK_DEVICE.update({domainName: Ip})
         print("The IP address of",domainName,"is",Ip)
@@ -28,14 +31,15 @@ def Device():
         else:
             exit
         
-
 def Isp_DNS_Resolver(domainName):
+    
     if DNS_BOOK_ISP.get(domainName)==None:
        print("IN.....ISP_resolver")
        Address_TLD=Root_Name_Server(domainName)
        print("Received address of TLD from RNS..... ISP")
        ANS_address= Top_level_Domain(domainName,Address_TLD)
        print("Received address of ANS from TLD..... ISP")
+       
        IP=Authoritative_Name_Server(domainName,ANS_address)
        DNS_BOOK_ISP.update({domainName: IP})
        print("Received ip of domainName from ANS.....ISP")
@@ -65,16 +69,15 @@ def Root_Name_Server(domainName):
 def Top_level_Domain(domainName,Address_TLD):
     print("IN.....Top_level_domain")
     # Get Authoritative Name server of the domain
-    res = dns.resolver.Resolver(configure=False)
-    res.nameservers = [Address_TLD]
+
+    res = dns.resolver.Resolver()
     r = res.resolve(domainName, 'ns')
+
     for val in r:
         nameserver=val.to_text()
-    
 
     # Get the IP_Address of the ANS
-    res = dns.resolver.Resolver(configure=False)
-    res.nameservers = [Address_TLD]
+    res = dns.resolver.Resolver()
     r = res.resolve(nameserver, 'A')
     for val in r:
         ANS_address=val.to_text()
